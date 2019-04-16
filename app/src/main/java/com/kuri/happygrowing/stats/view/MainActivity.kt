@@ -1,7 +1,8 @@
-package com.kuri.happygrowing
+package com.kuri.happygrowing.stats.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.kuri.happygrowing.R
 
 class MainActivity : AppCompatActivity() {
 
