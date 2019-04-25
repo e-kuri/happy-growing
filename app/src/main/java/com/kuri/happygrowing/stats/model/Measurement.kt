@@ -7,6 +7,6 @@ enum class SensorType {
     HUMIDITY
 }
 
-class Measurement(val value: Float, val date: Date, stringType: String) {
+class Measurement(val value: Float, val date: Date, val stringType: String) {
     val type: SensorType = SensorType.valueOf(stringType.toUpperCase())
 }
