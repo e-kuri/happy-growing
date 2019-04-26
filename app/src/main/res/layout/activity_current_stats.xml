@@ -7,8 +7,9 @@
     android:layout_height="match_parent"
     tools:context=".stats.view.CurrentStatsActivity">
     <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="395dp"
-            android:layout_height="715dp" android:layout_marginStart="8dp"
+            android:id="@+id/recyclerview_current_stats"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="8dp"
             app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
