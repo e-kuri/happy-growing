@@ -12,14 +12,20 @@ enum class SensorType {
 class Measurement(var value: Float = 0f, var date: Date = Date(0), type: String = "unknown") {
 
     var type: String = type
-
-    var sensorType = SensorType.UNKNOWN
-    private set
-    get() {
-        return try {
-            SensorType.valueOf(type.toUpperCase())
+    set(value) {
+        sensorType = try {
+            SensorType.valueOf(value.toUpperCase())
         }catch (e: IllegalArgumentException){
             SensorType.UNKNOWN
         }
+        field = value
     }
+
+    var sensorType = try {
+        SensorType.valueOf(type.toUpperCase())
+    }catch (e: IllegalArgumentException){
+        SensorType.UNKNOWN
+    }
+    private set
+
 }

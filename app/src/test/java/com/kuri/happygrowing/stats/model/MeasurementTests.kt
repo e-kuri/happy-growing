@@ -19,9 +19,10 @@ class MeasurementTests {
         Assert.assertTrue(measurement.sensorType == SensorType.HUMIDITY)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun measurementTest_UnexistingType(){
-         Measurement(0f, Date(), "papas")
+         val measurement = Measurement(0f, Date(), "papas")
+        Assert.assertTrue(measurement.sensorType == SensorType.UNKNOWN)
     }
 
 }
