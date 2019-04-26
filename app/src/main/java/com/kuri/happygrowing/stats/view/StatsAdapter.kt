@@ -9,7 +9,7 @@ import com.kuri.happygrowing.R
 import com.kuri.happygrowing.stats.model.Measurement
 import java.text.SimpleDateFormat
 
-internal class StatsAdapter(private val statsSet: Array<Measurement>) :
+internal class StatsAdapter(private var statsSet: List<Measurement>) :
     RecyclerView.Adapter<StatsAdapter.StatsViewHolder>(){
 
     companion object{
@@ -25,6 +25,11 @@ internal class StatsAdapter(private val statsSet: Array<Measurement>) :
 
     override fun onBindViewHolder(holder: StatsViewHolder, position: Int) {
         holder.bindItem(statsSet[position])
+    }
+
+    fun updateValues(statsSet: List<Measurement>){
+        this.statsSet = statsSet
+        notifyDataSetChanged()
     }
 
     class StatsViewHolder(item: View) : RecyclerView.ViewHolder(item){

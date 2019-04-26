@@ -1,15 +1,11 @@
 package com.kuri.happygrowing.repository
 
-import android.os.Handler
-import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.OnSuccessListener
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.kuri.happygrowing.shared.logging.ILogger
-import com.kuri.happygrowing.shared.logging.getLogger
 import com.kuri.happygrowing.stats.model.Measurement
 import com.kuri.happygrowing.stats.model.SensorType
 import com.kuri.happygrowing.stats.repository.measurement.FirestoreMeasurementRepository

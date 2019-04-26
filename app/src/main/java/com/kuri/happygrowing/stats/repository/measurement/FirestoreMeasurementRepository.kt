@@ -5,7 +5,6 @@ import com.kuri.happygrowing.shared.logging.ILogger
 import com.kuri.happygrowing.stats.model.Measurement
 import com.kuri.happygrowing.stats.model.SensorType
 import java.lang.IllegalArgumentException
-import java.util.*
 
 /**
  * CloudFirestore implementation for IMeasurement repository.
@@ -27,7 +26,7 @@ internal class FirestoreMeasurementRepository(private val measurmentColl: Collec
                     logger.logError("Failed to cast document to measurement $doc")
                     null
                 }
-            }.filter { msr -> msr != null }.associate { msr -> Pair(msr!!.type, msr) }
+            }.filter { msr -> msr != null && msr.sensorType != SensorType.UNKNOWN}.associate { msr -> Pair(msr!!.sensorType, msr) }
             resultCallback.onSuccessResult(resultMap)
         }.addOnFailureListener { resultCallback.onError(it) }
     }
