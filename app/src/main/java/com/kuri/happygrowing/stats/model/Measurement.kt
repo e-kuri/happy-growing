@@ -18,7 +18,7 @@ class Measurement(var value: Float = 0f, var date: Date = Date(0), type: String 
         }catch (e: IllegalArgumentException){
             SensorType.UNKNOWN
         }
-        field = value
+        field = sensorType.toString()
     }
 
     var sensorType = try {
