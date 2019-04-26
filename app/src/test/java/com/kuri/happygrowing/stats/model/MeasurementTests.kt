@@ -21,7 +21,7 @@ class MeasurementTests {
 
     @Test(expected = IllegalArgumentException::class)
     fun measurementTest_UnexistingType(){
-        val measurement = Measurement(0f, Date(), "papas")
+         Measurement(0f, Date(), "papas")
     }
 
 }

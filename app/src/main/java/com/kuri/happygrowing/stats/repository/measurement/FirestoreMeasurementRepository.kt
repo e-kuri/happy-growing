@@ -1,30 +1,34 @@
 package com.kuri.happygrowing.stats.repository.measurement
 
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.CollectionReference
+import com.kuri.happygrowing.shared.logging.ILogger
 import com.kuri.happygrowing.stats.model.Measurement
 import com.kuri.happygrowing.stats.model.SensorType
+import java.lang.IllegalArgumentException
+import java.util.*
 
-internal class FirestoreMeasurementRepository : IMeasurementRepository {
+/**
+ * CloudFirestore implementation for IMeasurement repository.
+ */
+internal class FirestoreMeasurementRepository(private val measurmentColl: CollectionReference, private val lastMeasurmentColl : CollectionReference,
+                                              private val logger: ILogger) : IMeasurementRepository {
 
-    private val db = FirebaseFirestore.getInstance().collection("User").document("XfBKFl8MkcYGqMDzE5u1")
-
-    override fun getLastBySensorType(types: Collection<SensorType>): Map<SensorType, Measurement> {
-        val result = mutableMapOf<SensorType, Measurement>()
-        val successListener = OnSuccessListener<QuerySnapshot> {
-            if(it != null && !it.isEmpty){
-                val resultDoc = it.documents[0]?.toObject(Measurement::class.java)
-                if(resultDoc != null){
-                    result[resultDoc.type] = resultDoc
+    /**
+     * Gets the last measurement for each the sensor in the repository.
+     * If the sensor type is not known, it will be ignored
+     * @param resultCallback callback to be called once the data has been returned or to notify if the operation failed
+     */
+    override fun getLastForAllSensors(resultCallback: OnRepositoryResult<Map<SensorType, Measurement>>) {
+        lastMeasurmentColl.get().addOnSuccessListener {
+            val resultMap = it.documents.asSequence().map { doc ->
+                try{
+                    doc.toObject(Measurement::class.java)
+                }catch (e: IllegalArgumentException){
+                    logger.logError("Failed to cast document to measurement $doc")
+                    null
                 }
-            }
-        }
-        types.forEach {
-            db.collection(MEASUREMENT_COLLECTION).orderBy(MEASUREMENT_TIMESTAMP_KEY, Query.Direction.DESCENDING)
-                .whereEqualTo(MEASUREMENT_TYPE_KEY, it.toString()).limit(1).get().addOnSuccessListener (successListener)
-        }
-        return result
+            }.filter { msr -> msr != null }.associate { msr -> Pair(msr!!.type, msr) }
+            resultCallback.onSuccessResult(resultMap)
+        }.addOnFailureListener { resultCallback.onError(it) }
     }
 }
