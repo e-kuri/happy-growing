@@ -2,18 +2,11 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                                    xmlns:app="http://schemas.android.com/apk/res-auto"
                                    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-                                   android:layout_height="wrap_content">
+                                   android:layout_height="wrap_content"
+                                    android:layout_marginTop="5dp" android:layout_marginBottom="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
                                                        android:layout_height="wrap_content">
-
-        <TextView
-                android:id="@+id/textview_title_stats"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TEMPERATURE" android:layout_marginEnd="16dp"
-                app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
-                style="@style/item_list_stats_top_left"/>
 
 
         <TextView
@@ -21,19 +14,40 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="25°C"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textview_title_stats"
                 style="@style/item_list_stats_top_left" android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="parent" android:layout_marginStart="28dp"
+                app:layout_constraintStart_toEndOf="@+id/icon_sensor" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="50sp"
+                app:layout_constraintVertical_bias="0.538"/>
 
 
         <TextView
                 android:id="@+id/textview_date_stats"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="04/12/1989 08:00" android:layout_marginEnd="16dp"
+                android:text="04/12/1989 08:00"
                 app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
                 style="@style/item_list_stats_top"/>
+        <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp" app:srcCompat="@drawable/ic_thermometer_low"
+                android:id="@+id/icon_sensor" android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"/>
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" app:srcCompat="@drawable/ic_arrow_increase"
+                android:id="@+id/icon_increase" app:layout_constraintStart_toEndOf="@+id/textview_value_stats"
+                android:layout_marginStart="8dp" android:layout_marginTop="28dp"
+                app:layout_constraintTop_toTopOf="parent" android:visibility="invisible"/>
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" app:srcCompat="@drawable/ic_arrow_decrease"
+                android:id="@+id/icon_decrease" android:layout_marginBottom="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textview_value_stats" android:layout_marginStart="8dp"
+                android:visibility="invisible"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

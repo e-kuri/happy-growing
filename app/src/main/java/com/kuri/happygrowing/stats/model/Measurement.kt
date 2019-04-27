@@ -9,7 +9,8 @@ enum class SensorType {
     UNKNOWN
 }
 
-class Measurement(var value: Float = 0f, var date: Date = Date(0), type: String = "unknown", var diff: Float = 0.0f) {
+class Measurement(var value: Float = 0f, var date: Date = Date(0), type: String = "unknown", var diff: Float = 0.0f,
+                  var stringValue: String = "") {
 
     var type: String = type
     set(value) {
