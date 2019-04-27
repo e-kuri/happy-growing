@@ -1,10 +1,7 @@
 package com.kuri.happygrowing.repository
 
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.*
+import com.google.firebase.firestore.EventListener
 import com.kuri.happygrowing.shared.logging.ILogger
 import com.kuri.happygrowing.stats.model.Measurement
 import com.kuri.happygrowing.stats.model.SensorType
@@ -19,8 +16,8 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import java.util.*
-import java.lang.Exception
-import java.lang.IllegalArgumentException
+import kotlin.Exception
+import kotlin.IllegalArgumentException
 
 
 inline fun <reified T: Any> mock() = Mockito.mock(T::class.java)
@@ -29,10 +26,7 @@ inline fun <reified T: Any> mock() = Mockito.mock(T::class.java)
 class FirestoreMeasurementRepoTests {
 
     @Mock
-    private var measurmentColl: CollectionReference? = null
-
-    @Mock
-    private var lastMeasurementColl: CollectionReference? = null
+    private var statsColl: CollectionReference? = null
 
     private var repo: IMeasurementRepository? = null
 
@@ -52,29 +46,27 @@ class FirestoreMeasurementRepoTests {
 
     @Before
     fun initialize(){
-        repo = FirestoreMeasurementRepository(measurmentColl!!, lastMeasurementColl!!, logger)
+        repo = FirestoreMeasurementRepository(statsColl!!, logger)
     }
 
     @Test
     fun getLastSuccessTest(){
-        val tempDoc = getDocumentSnapshotForMeasurement("temperature", 10.0f, Date())
-        val humDoc = getDocumentSnapshotForMeasurement("humidity", 10.0f, Date())
+        val meas1 = Measurement(10.0f, Date(), "TEMPERATURE")
+        val meas2 = Measurement(20.0f, Date(), "TEMPERATURE")
 
         val snapshot = Mockito.mock(QuerySnapshot::class.java)
-        Mockito.`when`(snapshot.documents).thenReturn(listOf(tempDoc, humDoc))
-
-        val snapshotTask: Task<QuerySnapshot> = mock()
-        Mockito.`when`(snapshotTask.addOnSuccessListener(Mockito.any())).then {
-            var res = it.arguments[0] as OnSuccessListener<QuerySnapshot>
-            res.onSuccess(snapshot)
-            mock<Task<QuerySnapshot>>()
+        Mockito.`when`(snapshot.toObjects(Measurement::class.java)).thenReturn(listOf(meas1, meas2))
+        val query = Mockito.mock(Query::class.java)
+        Mockito.`when`(query.orderBy(Mockito.anyString(), Mockito.any())).thenReturn(query)
+        Mockito.`when`(query.addSnapshotListener(Mockito.any())).then {
+            var res = it.arguments[0] as EventListener<QuerySnapshot>
+            res.onEvent(snapshot, null)
+            mock<ListenerRegistration>()
         }
-        Mockito.`when`(lastMeasurementColl!!.get()).thenReturn(snapshotTask)
-        repo!!.getLastForAllSensors(object: OnRepositoryResult<Map<SensorType, Measurement>>{
-            override fun onSuccessResult(result: Map<SensorType, Measurement>) {
+        Mockito.`when`(statsColl!!.whereEqualTo(Mockito.anyString(), Mockito.anyString())).thenReturn(query)
+        repo!!.listenMeasurementBySensor(SensorType.TEMPERATURE, null, object: OnRepositoryResult<List<Measurement>>{
+            override fun onSuccessResult(result: List<Measurement>) {
                 Assert.assertTrue(result.size == 2)
-                Assert.assertTrue(result.containsKey(SensorType.TEMPERATURE))
-                Assert.assertTrue(result.containsKey(SensorType.HUMIDITY))
             }
 
             override fun onError(e: Exception) {
@@ -84,72 +76,46 @@ class FirestoreMeasurementRepoTests {
     }
 
 
-    @Test
+    @Test(expected = IllegalArgumentException::class)
     fun getLastSuccess_SkipInvalidTest(){
-        val tempDoc = getDocumentSnapshotForMeasurement("temperature", 10.0f, Date())
-        val humDoc = getDocumentSnapshotForMeasurement("humidity", 10.0f, Date())
-        val invalidDoc = getDocumentSnapshotForMeasurement("papas", 10f, Date())
-
-        val snapshot = Mockito.mock(QuerySnapshot::class.java)
-        Mockito.`when`(snapshot.documents).thenReturn(listOf(tempDoc, humDoc, invalidDoc))
-
-        val snapshotTask: Task<QuerySnapshot> = mock()
-        Mockito.`when`(snapshotTask.addOnSuccessListener(Mockito.any())).then {
-            var res = it.arguments[0] as OnSuccessListener<QuerySnapshot>
-            res.onSuccess(snapshot)
-            mock<Task<QuerySnapshot>>()
-        }
-        Mockito.`when`(lastMeasurementColl!!.get()).thenReturn(snapshotTask)
-        repo!!.getLastForAllSensors(object: OnRepositoryResult<Map<SensorType, Measurement>>{
-            override fun onSuccessResult(result: Map<SensorType, Measurement>) {
-                Assert.assertTrue(result.size == 2)
-                Assert.assertTrue(result.containsKey(SensorType.TEMPERATURE))
-                Assert.assertTrue(result.containsKey(SensorType.HUMIDITY))
+        repo!!.listenMeasurementBySensor(SensorType.UNKNOWN, 2, object:OnRepositoryResult<List<Measurement>>{
+            override fun onSuccessResult(result: List<Measurement>) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onError(e: Exception) {
-                throw e
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
+
         })
     }
 
+/*
     @Test
     fun getLastSuccess_Error(){
-        val tempDoc = getDocumentSnapshotForMeasurement("temperature", 10.0f, Date())
-        val humDoc = getDocumentSnapshotForMeasurement("humidity", 10.0f, Date())
-        val invalidDoc = getDocumentSnapshotForMeasurement("papas", 10f, Date())
+        val meas1 = Measurement(10.0f, Date(), "TEMPERATURE")
+        val meas2 = Measurement(20.0f, Date(), "TEMPERATURE")
+        var exception = FirebaseFirestoreException("papas", FirebaseFirestoreException.Code.ABORTED)
 
         val snapshot = Mockito.mock(QuerySnapshot::class.java)
-        Mockito.`when`(snapshot.documents).thenReturn(listOf(tempDoc, humDoc, invalidDoc))
-
-        val snapshotTask: Task<QuerySnapshot> = mock()
-        Mockito.`when`(snapshotTask.addOnSuccessListener(Mockito.any())).then {
-            val result = mock<Task<QuerySnapshot>>()
-            Mockito.`when`(result.isSuccessful).thenReturn(false)
-            Mockito.`when`(result.exception).thenReturn(NoSuchFieldException())
-            result
+        Mockito.`when`(snapshot.toObjects(Measurement::class.java)).thenReturn(listOf(meas1, meas2))
+        val query = Mockito.mock(Query::class.java)
+        Mockito.`when`(query.orderBy(Mockito.anyString(), Mockito.any())).thenReturn(query)
+        Mockito.`when`(query.addSnapshotListener(Mockito.any())).then {
+            var res = it.arguments[0] as EventListener<QuerySnapshot>
+            res.onEvent(snapshot, FirebaseFirestoreException("papas", exception.code))
+            mock<ListenerRegistration>()
         }
-        Mockito.`when`(lastMeasurementColl!!.get()).thenReturn(snapshotTask)
-        repo!!.getLastForAllSensors(object: OnRepositoryResult<Map<SensorType, Measurement>>{
-            override fun onSuccessResult(result: Map<SensorType, Measurement>) {
-                throw Exception()
+        Mockito.`when`(statsColl!!.whereEqualTo(Mockito.anyString(), Mockito.anyString())).thenReturn(query)
+        repo!!.listenMeasurementBySensor(SensorType.TEMPERATURE, null, object: OnRepositoryResult<List<Measurement>>{
+            override fun onSuccessResult(result: List<Measurement>) {
+                throw NotImplementedError()
             }
 
             override fun onError(e: Exception) {
-                Assert.assertTrue(e is NoSuchFieldException)
+                Assert.assertEquals(exception, e)
             }
         })
     }
-
-    private fun getDocumentSnapshotForMeasurement(type: String, value: Float, date: Date): DocumentSnapshot{
-        var doc = Mockito.mock(DocumentSnapshot::class.java)
-        try{
-            val measurementResult = Measurement(value, date, type)
-            Mockito.`when`(doc.toObject(Measurement::class.java)).thenReturn(measurementResult)
-        } catch (e: IllegalArgumentException){
-            Mockito.`when`(doc.toObject(Measurement::class.java)).thenThrow(IllegalArgumentException::class.java)
-        }
-        return doc
-    }
-
+    */
 }

@@ -1,6 +1,5 @@
 package com.kuri.happygrowing.stats.viewmodel
 
-import android.hardware.Sensor
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,21 +17,30 @@ class CurrentStatsViewModel(private val repo: IMeasurementRepository, private va
         }
     }
 
-    private val onStatsReceived = object: OnRepositoryResult<Map<SensorType, Measurement>>{
-        override fun onSuccessResult(result: Map<SensorType, Measurement>) {
-            measurements.postValue(result)
+    private val onStatsReceived = object: OnRepositoryResult<List<Measurement>>{
+        override fun onSuccessResult(result: List<Measurement>) {
+            if(result.isNotEmpty()){
+                val updated = result[result.size - 1]
+                if(result.size == 2){
+                    updated.diff = updated.value - result[0].value
+                }
+                val msr = measurements.value?.toMutableMap() ?: mutableMapOf()
+                msr[updated.sensorType] = updated
+                measurements.postValue(msr)
+            }
         }
 
         override fun onError(e: Exception) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            logger.logError(e.message ?: e.toString())
         }
 
     }
 
     fun getMeasurments(): LiveData<Map<SensorType, Measurement>> = measurements
 
-    fun loadMeasurements(){
-        repo.getLastForAllSensors(onStatsReceived)
+    private fun loadMeasurements(){
+        SensorType.values().forEach {
+            if(it != SensorType.UNKNOWN) repo.listenMeasurementBySensor(it, 2, onStatsReceived) }
     }
 
 }
