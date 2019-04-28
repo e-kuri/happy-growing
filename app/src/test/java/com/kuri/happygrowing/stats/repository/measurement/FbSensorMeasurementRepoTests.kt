@@ -116,32 +116,23 @@ class FirestoreMeasurementRepoTests {
     }
 
     @Test
-    fun addRepeatedListeners(){
-        val query = Mockito.mock(Query::class.java)
-        Mockito.`when`(statsColl!!.whereEqualTo(Mockito.anyString(), Mockito.anyString())).thenReturn(query)
-        Mockito.`when`(query.orderBy(Mockito.anyString(), Mockito.any())).thenReturn(query)
-        Mockito.`when`(query.addSnapshotListener(Mockito.any())).then { mock<ListenerRegistration>() }
-        val onResult = object: OnRepositoryResult<List<Measurement>>{
-            override fun onSuccessResult(result: List<Measurement>) {
-                Assert.assertTrue(result.size == 2)
-            }
-
-            override fun onError(e: Exception) {
-                throw e
-            }
-        }
-        repo!!.listenMeasurementBySensor(SensorType.TEMPERATURE, null, onResult)
-
-        repo!!.listenMeasurementBySensor(SensorType.TEMPERATURE, null, onResult)
-        Assert.assertEquals(1, repo!!.listeners.size)
-    }
-
-    @Test
     fun removeListeners(){
+        val meas1 = Measurement(10.0f, Date(), "TEMPERATURE")
+        val meas2 = Measurement(20.0f, Date(), "TEMPERATURE")
+
+        val snapshot = Mockito.mock(QuerySnapshot::class.java)
+        Mockito.`when`(snapshot.toObjects(Measurement::class.java)).thenReturn(listOf(meas1, meas2))
         val query = Mockito.mock(Query::class.java)
-        Mockito.`when`(statsColl!!.whereEqualTo(Mockito.anyString(), Mockito.anyString())).thenReturn(query)
         Mockito.`when`(query.orderBy(Mockito.anyString(), Mockito.any())).thenReturn(query)
-        Mockito.`when`(query.addSnapshotListener(Mockito.any())).then { mock<ListenerRegistration>() }
+        val listenerList = mutableListOf<ListenerRegistration>()
+        Mockito.`when`(query.addSnapshotListener(Mockito.any())).then {
+            var res = it.arguments[0] as EventListener<QuerySnapshot>
+            res.onEvent(snapshot, null)
+            val result = mock<ListenerRegistration>()
+            listenerList.add(result)
+            result
+        }
+        Mockito.`when`(statsColl!!.whereEqualTo(Mockito.anyString(), Mockito.anyString())).thenReturn(query)
         repo!!.listenMeasurementBySensor(SensorType.TEMPERATURE, null, object: OnRepositoryResult<List<Measurement>>{
             override fun onSuccessResult(result: List<Measurement>) {
                 Assert.assertTrue(result.size == 2)
@@ -151,7 +142,6 @@ class FirestoreMeasurementRepoTests {
                 throw e
             }
         })
-
         repo!!.listenMeasurementBySensor(SensorType.TEMPERATURE, null, object: OnRepositoryResult<List<Measurement>>{
             override fun onSuccessResult(result: List<Measurement>) {
                 Assert.assertTrue(result.size == 2)
@@ -163,6 +153,9 @@ class FirestoreMeasurementRepoTests {
         })
         repo!!.stopListening()
         Assert.assertEquals(0, repo!!.listeners.size)
+        listenerList.forEach {
+            Mockito.verify(it).remove()
+        }
     }
 
 }
