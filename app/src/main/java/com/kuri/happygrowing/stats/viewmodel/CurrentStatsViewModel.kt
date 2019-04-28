@@ -25,6 +25,7 @@ class CurrentStatsViewModel(private val repo: IMeasurementRepository, private va
                     updated.diff = updated.value - result[0].value
                 }
                 val msr = measurements.value?.toMutableMap() ?: mutableMapOf()
+                setStringValue(updated)
                 msr[updated.sensorType] = updated
                 measurements.postValue(msr)
             }
@@ -34,6 +35,14 @@ class CurrentStatsViewModel(private val repo: IMeasurementRepository, private va
             logger.logError(e.message ?: e.toString())
         }
 
+    }
+
+    private fun setStringValue(measurement: Measurement){
+        measurement.stringValue = when(measurement.sensorType){
+            SensorType.HUMIDITY -> "${measurement.value} %"
+            SensorType.TEMPERATURE -> "${measurement.value} °C"
+            else -> measurement.value.toString()
+        }
     }
 
     fun getMeasurments(): LiveData<Map<SensorType, Measurement>> = measurements
