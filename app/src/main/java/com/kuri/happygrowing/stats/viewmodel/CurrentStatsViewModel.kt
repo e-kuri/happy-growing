@@ -1,6 +1,5 @@
 package com.kuri.happygrowing.stats.viewmodel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.kuri.happygrowing.shared.logging.ILogger
@@ -11,13 +10,22 @@ import com.kuri.happygrowing.stats.repository.measurement.OnRepositoryResult
 
 class CurrentStatsViewModel(private val repo: IMeasurementRepository, private val logger: ILogger) : ViewModel() {
 
-    private val measurements: MutableLiveData<Map<SensorType, Measurement>> by lazy {
-        MutableLiveData<Map<SensorType, Measurement>>().also {
+    inner class MeasurementsLiveData : MutableLiveData<Map<SensorType, Measurement>>(){
+        override fun onActive() {
+            super.onActive()
             loadMeasurements()
+        }
+
+        override fun onInactive() {
+            super.onInactive()
+            repo.stopListening()
         }
     }
 
-    private val onStatsReceived = object: OnRepositoryResult<List<Measurement>>{
+
+    val measurements = MeasurementsLiveData()
+
+    private val onStatsReceivedCallback = object: OnRepositoryResult<List<Measurement>>{
         override fun onSuccessResult(result: List<Measurement>) {
             if(result.isNotEmpty()){
                 val updated = result[result.size - 1]
@@ -45,11 +53,9 @@ class CurrentStatsViewModel(private val repo: IMeasurementRepository, private va
         }
     }
 
-    fun getMeasurments(): LiveData<Map<SensorType, Measurement>> = measurements
-
     private fun loadMeasurements(){
         SensorType.values().forEach {
-            if(it != SensorType.UNKNOWN) repo.listenMeasurementBySensor(it, 2, onStatsReceived) }
+            if(it != SensorType.UNKNOWN) repo.listenMeasurementBySensor(it, 2, onStatsReceivedCallback) }
     }
 
 }

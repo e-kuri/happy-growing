@@ -33,10 +33,12 @@ class CurrentStatsActivity : AppCompatActivity() {
         }
 
         val viewModel = ViewModelProviders.of(this, StatsViewModelFactory).get(CurrentStatsViewModel::class.java)
-        viewModel.getMeasurments().observe(this, androidx.lifecycle.Observer {
+        viewModel.measurements.observe(this, androidx.lifecycle.Observer {
             viewAdapter.updateValues(
                 SensorType.values().asSequence().filter { type -> it.containsKey(type) && it[type] != null }.map { type -> it[type] ?: error("") }.toList()
             )
         })
     }
+
+
 }

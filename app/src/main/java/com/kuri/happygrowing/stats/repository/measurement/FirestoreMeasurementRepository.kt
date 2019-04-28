@@ -1,6 +1,7 @@
 package com.kuri.happygrowing.stats.repository.measurement
 
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.kuri.happygrowing.shared.logging.ILogger
 import com.kuri.happygrowing.stats.model.Measurement
@@ -12,20 +13,32 @@ import kotlin.IllegalArgumentException
  */
 internal class FirestoreMeasurementRepository(private val statsCollection: CollectionReference,
                                               private val logger: ILogger) : IMeasurementRepository {
+
+     val listeners = mutableSetOf<ListenerRegistration>()
+
+    /**
+     * Starts listening to the stats collection for the query that fulfills the parameters specs.
+     * @param type Type of sensor required.
+     * @param resultSize Number of elements in the resulting document set. if null, all the documents that fulfill the
+     * specified conditions will be returned.
+     * @param resultCallback Callback to be called after the query, to send either the result set or the error.
+     * @param sortAsc If true, the search query will be done in ascending order, otherwise the sorting will be in
+     * descending order.
+     */
     override fun listenMeasurementBySensor(
         type: SensorType,
         resultSize: Long?,
         resultCallback: OnRepositoryResult<List<Measurement>>,
         sortAsc: Boolean
     ) {
-        if(type.equals(SensorType.UNKNOWN)){
+        if(type == SensorType.UNKNOWN){
             logger.logError("Requested measurements for unknown sensor type")
             throw IllegalArgumentException("Unknown is not a valid sensor type.")
         }
         var query = statsCollection.whereEqualTo(MEASUREMENT_TYPE_KEY, type.toString()).orderBy(MEASUREMENT_TIMESTAMP_KEY,
             if (sortAsc) Query.Direction.ASCENDING else Query.Direction.DESCENDING)
         if(resultSize != null) query.limit(resultSize)
-        query.addSnapshotListener{ snapshot, e ->
+        listeners.add(query.addSnapshotListener{ snapshot, e ->
             if(e != null){
                 logger.logError("Failed to update stats: ${e.message}")
                 resultCallback.onError(e)
@@ -36,7 +49,18 @@ internal class FirestoreMeasurementRepository(private val statsCollection: Colle
                     resultCallback.onSuccessResult(listOf())
                 }
             }
-        }
+        })
     }
+
+    /**
+     * Stop listening for changes in the repository
+     */
+    override fun stopListening() {
+        listeners.forEach{
+            it.remove()
+        }
+        listeners.clear()
+    }
+
 
 }
