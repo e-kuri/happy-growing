@@ -44,6 +44,7 @@ class CurrentStatsViewModel(private val repo: IMeasurementRepository, private va
      * This callback is shared between the listeners to each of the sensors.
      */
     private val onStatsReceivedCallback = object: OnRepositoryResult<List<Measurement>>{
+
         override fun onSuccessResult(result: List<Measurement>) {
             if(result.isNotEmpty()){
                 val updated = result[result.size - 1]
