@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kuri.happygrowing.R
 import com.kuri.happygrowing.shared.callback.OnResultCallback
 import com.kuri.happygrowing.stats.model.Measurement
-import com.kuri.happygrowing.stats.model.SensorType
 import com.kuri.happygrowing.stats.viewmodel.CurrentStatsViewModel
 import com.kuri.happygrowing.stats.viewmodel.StatsViewModelFactory
 import java.util.*
@@ -19,7 +18,6 @@ class CurrentStatsActivity : AppCompatActivity() {
     private lateinit var viewAdapter: StatsAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var viewModel: CurrentStatsViewModel
-    private lateinit var onSensorUpdateCallback: OnResultCallback<List<Measurement>>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +33,7 @@ class CurrentStatsActivity : AppCompatActivity() {
             adapter = viewAdapter
         }
 
-        onSensorUpdateCallback = object: OnResultCallback<List<Measurement>>{
+        val onSensorUpdateCallback = object: OnResultCallback<List<Measurement>>{
 
             override fun onSuccessResult(result: List<Measurement>) {
                 viewAdapter.updateValues(result)
