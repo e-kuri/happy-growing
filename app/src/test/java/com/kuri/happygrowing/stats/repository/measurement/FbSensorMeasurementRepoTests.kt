@@ -2,6 +2,7 @@ package com.kuri.happygrowing.stats.repository.measurement
 
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
+import com.kuri.happygrowing.shared.callback.OnResultCallback
 import com.kuri.happygrowing.shared.logging.ILogger
 import com.kuri.happygrowing.stats.model.Measurement
 import com.kuri.happygrowing.stats.model.SensorType
@@ -61,7 +62,8 @@ class FirestoreMeasurementRepoTests {
             mock<ListenerRegistration>()
         }
         Mockito.`when`(statsColl!!.whereEqualTo(Mockito.anyString(), Mockito.anyString())).thenReturn(query)
-        repo!!.listenMeasurementBySensor(SensorType.TEMPERATURE, null, object: OnRepositoryResult<List<Measurement>>{
+        repo!!.listenMeasurementBySensor(SensorType.TEMPERATURE, null, object:
+            OnResultCallback<List<Measurement>> {
             override fun onSuccessResult(result: List<Measurement>) {
                 Assert.assertTrue(result.size == 2)
             }
@@ -75,7 +77,8 @@ class FirestoreMeasurementRepoTests {
 
     @Test(expected = IllegalArgumentException::class)
     fun getLastSuccess_SkipInvalidTest(){
-        repo!!.listenMeasurementBySensor(SensorType.UNKNOWN, 2, object:OnRepositoryResult<List<Measurement>>{
+        repo!!.listenMeasurementBySensor(SensorType.UNKNOWN, 2, object:
+            OnResultCallback<List<Measurement>> {
             override fun onSuccessResult(result: List<Measurement>) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -93,7 +96,8 @@ class FirestoreMeasurementRepoTests {
         Mockito.`when`(statsColl!!.whereEqualTo(Mockito.anyString(), Mockito.anyString())).thenReturn(query)
         Mockito.`when`(query.orderBy(Mockito.anyString(), Mockito.any())).thenReturn(query)
         Mockito.`when`(query.addSnapshotListener(Mockito.any())).then { mock<ListenerRegistration>() }
-        repo!!.listenMeasurementBySensor(SensorType.TEMPERATURE, null, object: OnRepositoryResult<List<Measurement>>{
+        repo!!.listenMeasurementBySensor(SensorType.TEMPERATURE, null, object:
+            OnResultCallback<List<Measurement>> {
             override fun onSuccessResult(result: List<Measurement>) {
                 Assert.assertTrue(result.size == 2)
             }
@@ -103,7 +107,8 @@ class FirestoreMeasurementRepoTests {
             }
         })
 
-        repo!!.listenMeasurementBySensor(SensorType.TEMPERATURE, null, object: OnRepositoryResult<List<Measurement>>{
+        repo!!.listenMeasurementBySensor(SensorType.TEMPERATURE, null, object:
+            OnResultCallback<List<Measurement>> {
             override fun onSuccessResult(result: List<Measurement>) {
                 Assert.assertTrue(result.size == 2)
             }
@@ -133,7 +138,8 @@ class FirestoreMeasurementRepoTests {
             result
         }
         Mockito.`when`(statsColl!!.whereEqualTo(Mockito.anyString(), Mockito.anyString())).thenReturn(query)
-        repo!!.listenMeasurementBySensor(SensorType.TEMPERATURE, null, object: OnRepositoryResult<List<Measurement>>{
+        repo!!.listenMeasurementBySensor(SensorType.TEMPERATURE, null, object:
+            OnResultCallback<List<Measurement>> {
             override fun onSuccessResult(result: List<Measurement>) {
                 Assert.assertTrue(result.size == 2)
             }
@@ -142,7 +148,8 @@ class FirestoreMeasurementRepoTests {
                 throw e
             }
         })
-        repo!!.listenMeasurementBySensor(SensorType.TEMPERATURE, null, object: OnRepositoryResult<List<Measurement>>{
+        repo!!.listenMeasurementBySensor(SensorType.TEMPERATURE, null, object:
+            OnResultCallback<List<Measurement>> {
             override fun onSuccessResult(result: List<Measurement>) {
                 Assert.assertTrue(result.size == 2)
             }

@@ -3,6 +3,7 @@ package com.kuri.happygrowing.stats.repository.measurement
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
+import com.kuri.happygrowing.shared.callback.OnResultCallback
 import com.kuri.happygrowing.shared.logging.ILogger
 import com.kuri.happygrowing.stats.model.Measurement
 import com.kuri.happygrowing.stats.model.SensorType
@@ -21,14 +22,14 @@ internal class FirestoreMeasurementRepository(private val statsCollection: Colle
      * @param type Type of sensor required.
      * @param resultSize Number of elements in the resulting document set. if null, all the documents that fulfill the
      * specified conditions will be returned.
-     * @param resultCallback Callback to be called after the query, to send either the result set or the error.
+     * @param resultCallbackCallback Callback to be called after the query, to send either the result set or the error.
      * @param sortAsc If true, the search query will be done in ascending order, otherwise the sorting will be in
      * descending order.
      */
     override fun listenMeasurementBySensor(
         type: SensorType,
         resultSize: Long?,
-        resultCallback: OnRepositoryResult<List<Measurement>>,
+        resultCallbackCallback: OnResultCallback<List<Measurement>>,
         sortAsc: Boolean
     ) {
         if(type == SensorType.UNKNOWN){
@@ -41,12 +42,12 @@ internal class FirestoreMeasurementRepository(private val statsCollection: Colle
         listeners.add(query.addSnapshotListener{ snapshot, e ->
             if(e != null){
                 logger.logError("Failed to update stats: ${e.message}")
-                resultCallback.onError(e)
+                resultCallbackCallback.onError(e)
             } else {
                 if(snapshot != null) {
-                    resultCallback.onSuccessResult(snapshot.toObjects(Measurement::class.java))
+                    resultCallbackCallback.onSuccessResult(snapshot.toObjects(Measurement::class.java))
                 } else {
-                    resultCallback.onSuccessResult(listOf())
+                    resultCallbackCallback.onSuccessResult(listOf())
                 }
             }
         })
