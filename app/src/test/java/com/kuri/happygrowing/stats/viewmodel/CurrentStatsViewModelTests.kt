@@ -34,6 +34,9 @@ class CurrentStatsViewModelTests {
     @Mock
     private lateinit var repo: IMeasurementRepository
 
+    @Mock
+    private lateinit var resultCallback: OnResultCallback<List<Measurement>>
+
 
     @Before
     fun setUp(){
@@ -53,7 +56,6 @@ class CurrentStatsViewModelTests {
 
     @Test
     fun startListening(){
-        val resultCallback = mock<OnResultCallback<Map<SensorType, Measurement>>>()
         CurrentStatsViewModel(lifecycleOwner!!.lifecycle, repo!!, logger, resultCallback)
         lifecycleOwner!!.onCreate()
         lifecycleOwner!!.onStart()
@@ -67,7 +69,6 @@ class CurrentStatsViewModelTests {
 
     @Test
     fun stopListening(){
-        val resultCallback = mock<OnResultCallback<Map<SensorType, Measurement>>>()
         CurrentStatsViewModel(lifecycleOwner!!.lifecycle, repo!!, logger, resultCallback)
         lifecycleOwner!!.onCreate()
         lifecycleOwner!!.onStart()
@@ -79,7 +80,6 @@ class CurrentStatsViewModelTests {
 
     @Test
     fun restartListening(){
-        val resultCallback = mock<OnResultCallback<Map<SensorType, Measurement>>>()
         CurrentStatsViewModel(lifecycleOwner!!.lifecycle, repo!!, logger, resultCallback)
         lifecycleOwner!!.onCreate()
         lifecycleOwner!!.onStart()
@@ -94,7 +94,6 @@ class CurrentStatsViewModelTests {
 
     @Test
     fun cleanInformation(){
-        val resultCallback = mock<OnResultCallback<Map<SensorType, Measurement>>>()
         val viewModel = CurrentStatsViewModel(lifecycleOwner!!.lifecycle, repo!!, logger, resultCallback)
         lifecycleOwner!!.onCreate()
         lifecycleOwner!!.onStart()
@@ -107,7 +106,6 @@ class CurrentStatsViewModelTests {
 
     @Test
     fun validateResultCallbackCalls(){
-        val resultCallback = mock<OnResultCallback<Map<SensorType, Measurement>>>()
         CurrentStatsViewModel(lifecycleOwner!!.lifecycle, repo!!, logger, resultCallback)
         lifecycleOwner!!.onCreate()
         lifecycleOwner!!.onStart()
@@ -117,9 +115,9 @@ class CurrentStatsViewModelTests {
 
     @Test
     fun validateResultCallbackContent(){
-        var result = mapOf<SensorType, Measurement>()
-        val resultCallback = object: OnResultCallback<Map<SensorType, Measurement>>{
-            override fun onSuccessResult(res: Map<SensorType, Measurement>) {
+        var result = listOf<Measurement>()
+        val resultCallback = object: OnResultCallback<List<Measurement>>{
+            override fun onSuccessResult(res: List<Measurement>) {
                 result = res
             }
 
@@ -133,8 +131,13 @@ class CurrentStatsViewModelTests {
         lifecycleOwner!!.onStart()
         lifecycleOwner!!.onResume()
         Assert.assertEquals(2, result.size)
-        Assert.assertTrue((result[SensorType.HUMIDITY] ?: error("")).stringValue == ("20.0 %"))
-        Assert.assertTrue((result[SensorType.TEMPERATURE] ?: error("")).stringValue == ("10.0 °C"))
+        result.forEach{
+            when {
+                it.sensorType == SensorType.HUMIDITY -> Assert.assertEquals("20.0 %", it.stringValue)
+                it.sensorType == SensorType.TEMPERATURE -> Assert.assertEquals("10.0 °C", it.stringValue)
+                else -> throw IllegalArgumentException()
+            }
+        }
     }
 
     @Test
@@ -157,9 +160,9 @@ class CurrentStatsViewModelTests {
             }
             callback.onSuccessResult(measurements)
         }
-        var result = mapOf<SensorType, Measurement>()
-        val resultCallback = object: OnResultCallback<Map<SensorType, Measurement>>{
-            override fun onSuccessResult(res: Map<SensorType, Measurement>) {
+        var result = listOf<Measurement>()
+        val resultCallback = object: OnResultCallback<List<Measurement>>{
+            override fun onSuccessResult(res: List<Measurement>) {
                 result = res
             }
 
@@ -173,8 +176,13 @@ class CurrentStatsViewModelTests {
         lifecycleOwner!!.onStart()
         lifecycleOwner!!.onResume()
         Assert.assertEquals(2, result.size)
-        Assert.assertTrue((result[SensorType.HUMIDITY] ?: error("")).diff == (2f))
-        Assert.assertTrue((result[SensorType.TEMPERATURE] ?: error("")).diff == (-2f))
+        result.forEach{
+            when {
+                it.sensorType == SensorType.HUMIDITY -> Assert.assertEquals(2f, it.diff)
+                it.sensorType == SensorType.TEMPERATURE -> Assert.assertEquals(-2f, it.diff)
+                else -> throw IllegalArgumentException()
+            }
+        }
     }
 
     @Test
@@ -189,8 +197,8 @@ class CurrentStatsViewModelTests {
             callback.onError(error)
         }
         var result = mapOf<SensorType, Measurement>()
-        val resultCallback = object: OnResultCallback<Map<SensorType, Measurement>>{
-            override fun onSuccessResult(res: Map<SensorType, Measurement>) {
+        val resultCallback = object: OnResultCallback<List<Measurement>>{
+            override fun onSuccessResult(res: List<Measurement>) {
 
             }
 
@@ -216,7 +224,6 @@ class CurrentStatsViewModelTests {
             callback.onError(error)
         }
         var result = mapOf<SensorType, Measurement>()
-        val resultCallback = mock<OnResultCallback<Map<SensorType, Measurement>>>()
         CurrentStatsViewModel(lifecycleOwner!!.lifecycle, repo!!, logger, resultCallback)
         lifecycleOwner!!.onCreate()
         lifecycleOwner!!.onStart()

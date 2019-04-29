@@ -16,7 +16,7 @@ object StatsViewModelFactory: ViewModelProvider.Factory {
 
 object StatsViewModelFactory {
 
-    fun getViewModel(owner: LifecycleOwner, callback: OnResultCallback<Map<SensorType, Measurement>>) : CurrentStatsViewModel{
+    fun getViewModel(owner: LifecycleOwner, callback: OnResultCallback<List<Measurement>>) : CurrentStatsViewModel{
         return CurrentStatsViewModel(owner.lifecycle, StatsRepositoryFactory.repo, getLogger(), callback)
     }
 }

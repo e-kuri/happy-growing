@@ -19,6 +19,7 @@ class CurrentStatsActivity : AppCompatActivity() {
     private lateinit var viewAdapter: StatsAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var viewModel: CurrentStatsViewModel
+    private lateinit var onSensorUpdateCallback: OnResultCallback<List<Measurement>>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,20 +35,18 @@ class CurrentStatsActivity : AppCompatActivity() {
             adapter = viewAdapter
         }
 
-        viewModel = StatsViewModelFactory.getViewModel(this,
-            object: OnResultCallback<Map<SensorType, Measurement>>{
+        onSensorUpdateCallback = object: OnResultCallback<List<Measurement>>{
 
-                override fun onSuccessResult(result: Map<SensorType, Measurement>) {
-                    viewAdapter.updateValues(
-                    SensorType.values().asSequence().filter {
-                            type -> result.containsKey(type) && result[type] != null
-                    }.map { type -> result[type] ?: error("") }.toList())
-                }
+            override fun onSuccessResult(result: List<Measurement>) {
+                viewAdapter.updateValues(result)
+            }
 
-                override fun onError(e: Exception) {
-                    Toast.makeText(this@CurrentStatsActivity, e.message, Toast.LENGTH_LONG)
-                }
-        })
+            override fun onError(e: Exception) {
+                Toast.makeText(this@CurrentStatsActivity, e.message, Toast.LENGTH_LONG)
+            }
+        }
+
+        viewModel = StatsViewModelFactory.getViewModel(this, onSensorUpdateCallback)
     }
 
 

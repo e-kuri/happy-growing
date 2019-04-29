@@ -14,7 +14,7 @@ class CurrentStatsViewModel(
     @get:VisibleForTesting(otherwise = VisibleForTesting.PRIVATE) val lifecycle: Lifecycle,
     private val repo: IMeasurementRepository,
     private val logger: ILogger,
-    private val callback: OnResultCallback<Map<SensorType, Measurement>>) : LifecycleObserver {
+    private val callback: OnResultCallback<List<Measurement>>) : LifecycleObserver {
 
     init {
         lifecycle.addObserver(this)
@@ -34,14 +34,16 @@ class CurrentStatsViewModel(
         OnResultCallback<List<Measurement>> {
 
         override fun onSuccessResult(result: List<Measurement>) {
-            if(result.isNotEmpty()){
+            if(result.isNotEmpty() && result[0].sensorType != SensorType.UNKNOWN){
                 val updated = result[result.size - 1]
                 if(result.size == 2){
                     updated.diff = updated.value - result[0].value
                 }
                 setStringValue(updated)
                 measurements[updated.sensorType] = updated
-                callback.onSuccessResult(measurements)
+                callback.onSuccessResult(SensorType.values().asSequence().filter {
+                        type -> measurements.containsKey(type) && measurements[type] != null
+                }.map { type -> measurements[type] ?: error("") }.toList())
             }
         }
 
