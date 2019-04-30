@@ -4,6 +4,7 @@ import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
 import com.kuri.happygrowing.shared.callback.OnResultCallback
 import com.kuri.happygrowing.shared.logging.ILogger
+import com.kuri.happygrowing.shared.mock
 import com.kuri.happygrowing.stats.model.Measurement
 import com.kuri.happygrowing.stats.model.SensorType
 import org.junit.Assert
@@ -16,9 +17,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import java.util.*
 import kotlin.Exception
 import kotlin.IllegalArgumentException
-
-
-inline fun <reified T: Any> mock() = Mockito.mock(T::class.java)
 
 @RunWith(MockitoJUnitRunner.Silent::class)
 class FirestoreMeasurementRepoTests {

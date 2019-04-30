@@ -1,18 +1,19 @@
 package com.kuri.happygrowing.shared.logging
 
 import android.util.Log
-import com.kuri.happygrowing.stats.repository.measurement.StatsRepositoryFactory
+
+private const val TAG = "HappyGrowing"
 
 fun getLogger() = object: ILogger{
     override fun logError(msg: String) {
-        Log.e(StatsRepositoryFactory.TAG, msg)
+        Log.e(TAG, msg)
     }
 
     override fun logDebug(msg: String) {
-        Log.d(StatsRepositoryFactory.TAG, msg)
+        Log.d(TAG, msg)
     }
 
     override fun logInfo(msg: String) {
-        Log.i(StatsRepositoryFactory.TAG, msg)
+        Log.i(TAG, msg)
     }
 }

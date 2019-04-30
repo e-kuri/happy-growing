@@ -7,7 +7,6 @@ import com.kuri.happygrowing.shared.logging.ILogger
 import com.kuri.happygrowing.stats.model.Measurement
 import com.kuri.happygrowing.stats.model.SensorType
 import com.kuri.happygrowing.stats.repository.measurement.IMeasurementRepository
-import com.kuri.happygrowing.stats.repository.measurement.mock
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
