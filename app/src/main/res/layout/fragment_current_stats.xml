@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".stats.view.CurrentStatsActivity">
+    tools:context=".stats.view.CurrentStatsFragment">
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview_current_stats"
             android:layout_width="match_parent"
