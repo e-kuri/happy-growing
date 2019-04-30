@@ -3,6 +3,8 @@ package com.kuri.happygrowing.stats.repository.measurement
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
+import com.kuri.happygrowing.shared.MEASUREMENT_TIMESTAMP_KEY
+import com.kuri.happygrowing.shared.MEASUREMENT_TYPE_KEY
 import com.kuri.happygrowing.shared.callback.OnResultCallback
 import com.kuri.happygrowing.shared.logging.ILogger
 import com.kuri.happygrowing.stats.model.Measurement
@@ -36,7 +38,8 @@ internal class FirestoreMeasurementRepository(private val statsCollection: Colle
             logger.logError("Requested measurements for unknown sensor type")
             throw IllegalArgumentException("Unknown is not a valid sensor type.")
         }
-        var query = statsCollection.whereEqualTo(MEASUREMENT_TYPE_KEY, type.toString()).orderBy(MEASUREMENT_TIMESTAMP_KEY,
+        var query = statsCollection.whereEqualTo(MEASUREMENT_TYPE_KEY, type.toString()).orderBy(
+            MEASUREMENT_TIMESTAMP_KEY,
             if (sortAsc) Query.Direction.ASCENDING else Query.Direction.DESCENDING)
         if(resultSize != null) query.limit(resultSize)
         listeners.add(query.addSnapshotListener{ snapshot, e ->
