@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="actionBarTheme">@style/HGToolBarStyle</item>
     </style>
 
     <style name="item_list_stats_top">
@@ -15,6 +16,8 @@
     <style name="item_list_stats_top_left">
         <item name="android:layout_marginLeft">10dp</item>
     </style>
-
+    <style name="HGToolBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:titleTextColor">#000000</item>
+    </style>
 
 </resources>

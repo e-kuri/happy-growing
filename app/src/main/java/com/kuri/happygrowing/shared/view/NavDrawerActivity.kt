@@ -28,7 +28,7 @@ class NavDrawerActivity: AppCompatActivity() {
         mContainer = findViewById(R.id.main_container)
         mDrawerLayout = findViewById(R.id.activity_nav_drawer)
         mStatsFragment = CurrentStatsFragment()
-        showFragment(mStatsFragment)
+        showFragment(mStatsFragment, getString(R.string.stats))
         mToggle = ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close)
 
         mDrawerLayout.addDrawerListener(mToggle)
@@ -39,8 +39,11 @@ class NavDrawerActivity: AppCompatActivity() {
 
         findViewById<NavigationView>(R.id.nv).setNavigationItemSelectedListener {
             when(it.itemId) {
-                R.id.menu_option_settings -> showFragment(mSettingsFragment ?: SettingsFragment())
-                R.id.menu_option_stats -> showFragment(mStatsFragment)
+                R.id.menu_option_settings -> {
+                    if(mSettingsFragment == null) mSettingsFragment = SettingsFragment()
+                    showFragment(mSettingsFragment!!, getString(R.string.settings))
+                }
+                R.id.menu_option_stats -> showFragment(mStatsFragment, getString(R.string.stats))
             }
             true
         }
@@ -55,10 +58,11 @@ class NavDrawerActivity: AppCompatActivity() {
         }
     }
 
-    private fun showFragment(fragment: Fragment){
+    private fun showFragment(fragment: Fragment, title: String){
         if(mContainer != null) {
             supportFragmentManager.beginTransaction().replace(mContainer.id, fragment).commit()
             closeNavigationDrawer()
+            supportActionBar?.title = title
         }
     }
 
