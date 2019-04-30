@@ -16,6 +16,7 @@ class CurrentStatsViewModel(
     private val logger: ILogger,
     private val callback: OnResultCallback<List<Measurement>>) : LifecycleObserver {
 
+    private var listening = false
     init {
         lifecycle.addObserver(this)
     }

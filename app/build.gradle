@@ -35,6 +35,7 @@ dependencies {
     implementation 'com.android.support:cardview-v7:28.0.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel:2.0.0-rc01'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-rc01'
+    implementation 'com.android.support:design:28+'
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
     testImplementation 'org.mockito:mockito-core:2.27.0'
