@@ -9,7 +9,7 @@ Features completed:
 * Display current temperature and humidity of the tent in real time. If there is any change, it will be reflected in the screen without requiring any user input.
 
 
-Features to be developped:
+Features to be developed:
 * User settings module to know which are the expected values of humidity and temperature.
 * Notifications received when the values are above or beyond the specified threshold.
 * Remote control of the tent, to let the user turn on/off the lights, control the humifier, the fans and extractor.
