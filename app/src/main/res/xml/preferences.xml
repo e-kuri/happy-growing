@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.kuri.happygrowing.settings.view.HGPreferenceCategory
+        android:key="temp_category"
+        android:title="Temperature">
+
+        <EditTextPreference
+                android:key="min_temp"
+                android:title="Minimum Temperature" />
+        <EditTextPreference
+                android:key="max_temp"
+                android:title="Maximum Temperature" />
+
+    </com.kuri.happygrowing.settings.view.HGPreferenceCategory>
+
+    <com.kuri.happygrowing.settings.view.HGPreferenceCategory
+        android:key="hum_categoty"
+        android:title="Humidity">
+
+        <EditTextPreference
+                android:key="min_hum"
+                android:title="Minimum Humidity" />
+        <EditTextPreference
+                android:key="max_hum"
+                android:title="Maximum Humidity" />
+
+    </com.kuri.happygrowing.settings.view.HGPreferenceCategory>
+
+</PreferenceScreen>
