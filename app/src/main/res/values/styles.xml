@@ -17,7 +17,7 @@
         <item name="android:layout_marginLeft">10dp</item>
     </style>
     <style name="HGToolBarStyle" parent="Widget.AppCompat.ActionBar">
-        <item name="android:titleTextColor">#000000</item>
+        <item name="android:titleTextColor">#3F2123</item>
     </style>
 
 </resources>
