@@ -15,7 +15,6 @@ class SettingsFragment: PreferenceFragmentCompat() {
             Toast.makeText(context, newValue.toString(), Toast.LENGTH_SHORT).show()
             true
         }
-        minTempPref?.summary = "papas"
     }
     
 }

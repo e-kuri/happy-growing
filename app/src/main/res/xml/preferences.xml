@@ -1,28 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto">
     <com.kuri.happygrowing.settings.view.HGPreferenceCategory
         android:key="temp_category"
         android:title="Temperature">
 
         <EditTextPreference
-                android:key="min_temp"
-                android:title="Minimum Temperature" />
+                android:key="minTemp"
+                android:title="@string/min_temp_celsius_title"
+                android:inputType="number"
+                app:useSimpleSummaryProvider="true"/>
         <EditTextPreference
-                android:key="max_temp"
-                android:title="Maximum Temperature" />
+                android:key="maxTemp"
+                android:title="@string/max_temp_celsius_title"
+                android:inputType="number"
+                app:useSimpleSummaryProvider="true"/>
 
     </com.kuri.happygrowing.settings.view.HGPreferenceCategory>
 
     <com.kuri.happygrowing.settings.view.HGPreferenceCategory
-        android:key="hum_categoty"
+        android:key="hum_category"
         android:title="Humidity">
 
         <EditTextPreference
-                android:key="min_hum"
-                android:title="Minimum Humidity" />
+                android:key="minHum"
+                android:title="@string/min_hum_title"
+                android:inputType="number"
+                app:useSimpleSummaryProvider="true"/>
         <EditTextPreference
-                android:key="max_hum"
-                android:title="Maximum Humidity" />
+                android:key="maxHum"
+                android:title="@string/max_hum_title"
+                android:inputType="number"
+                app:useSimpleSummaryProvider="true"/>
 
     </com.kuri.happygrowing.settings.view.HGPreferenceCategory>
 

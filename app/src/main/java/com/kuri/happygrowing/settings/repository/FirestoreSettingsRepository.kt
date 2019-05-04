@@ -27,12 +27,20 @@ internal class FirestoreSettingsRepository(private val settingsCollection: Colle
      */
     private fun getSettings(callback: OnResultCallback<Settings>, source: Source){
         settingsCollection.document(SETTINGS_COLLECTION).get(source).addOnSuccessListener{
-            val settings = if(it.exists()) it.toObject(Settings::class.java) else Settings(0f, 0f, 0f, 0f)
-            if(settings == null){
-                logger.logError("Could not cast result to settings object: $it")
-                callback.onSuccessResult(Settings(0f,0f,0f,0f))
+            if(it.exists()) {
+                val settings = it.toObject(Settings::class.java)
+                if(settings == null){
+                    logger.logError("Could not cast result to settings object: $it")
+                    callback.onError(ClassCastException("Could not cast result to settings object: $it"))
+                } else {
+                    callback.onSuccessResult(settings)
+                }
             } else {
-                callback.onSuccessResult(settings)
+                if(source == Source.CACHE){
+                    getSettings(callback, Source.SERVER)
+                } else {
+                    callback.onSuccessResult(Settings())
+                }
             }
         }.addOnFailureListener {
             if(source == Source.CACHE){
