@@ -42,9 +42,15 @@ class HGPreferenceDataStoreTests {
     }
 
     @Test
-    fun getDefault_SuccessTest() {
+    fun getFloat_DefaultTest() {
         val dataStore = getDataStoreWithSettings()
         Assert.assertEquals(100f, dataStore.getFloat("none", 100f))
+    }
+
+    @Test
+    fun getFloat_NullTest() {
+        val dataStore = getDataStoreWithSettings()
+        Assert.assertEquals(100f, dataStore.getFloat(null, 100f))
     }
 
     private fun getDataStoreWithSettings() : HGPreferenceDataStore {
