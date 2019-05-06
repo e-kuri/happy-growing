@@ -2,6 +2,7 @@ package com.kuri.happygrowing.stats.repository.measurement
 
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
+import com.kuri.happygrowing.shared.TestLogger
 import com.kuri.happygrowing.shared.callback.OnResultCallback
 import com.kuri.happygrowing.shared.logging.ILogger
 import com.kuri.happygrowing.shared.mock
@@ -26,19 +27,7 @@ class FirestoreMeasurementRepoTests {
 
     private var repo: FirestoreMeasurementRepository? = null
 
-    private val logger = object: ILogger{
-        override fun logError(msg: String) {
-            println(msg)
-        }
-
-        override fun logDebug(msg: String) {
-            println(msg)
-        }
-
-        override fun logInfo(msg: String) {
-            println(msg)
-        }
-    }
+    private val logger = TestLogger()
 
     @Before
     fun initialize(){

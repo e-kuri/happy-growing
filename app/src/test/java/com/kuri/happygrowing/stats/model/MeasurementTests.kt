@@ -2,7 +2,6 @@ package com.kuri.happygrowing.stats.model
 
 import org.junit.Assert
 import org.junit.Test
-import java.lang.IllegalArgumentException
 import java.util.*
 
 class MeasurementTests {
