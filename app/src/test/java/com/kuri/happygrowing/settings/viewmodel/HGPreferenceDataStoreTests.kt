@@ -2,14 +2,11 @@ package com.kuri.happygrowing.settings.viewmodel
 
 import com.kuri.happygrowing.settings.model.Settings
 import com.kuri.happygrowing.settings.repository.ISettingsRepository
-import com.kuri.happygrowing.shared.SETTINGS_MAX_HUM_KEY
-import com.kuri.happygrowing.shared.SETTINGS_MAX_TEMP_KEY
-import com.kuri.happygrowing.shared.TestLogger
+import com.kuri.happygrowing.shared.*
 import com.kuri.happygrowing.shared.callback.OnResultCallback
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
 
@@ -23,7 +20,31 @@ class HGPreferenceDataStoreTests {
     @Test
     fun getMaxHumidity_SuccessTest() {
         val dataStore = getDataStoreWithSettings()
+        Assert.assertEquals(40f, dataStore.getFloat(SETTINGS_MAX_HUM_KEY, 100f))
+    }
+
+    @Test
+    fun getMinHumidity_SuccessTest() {
+        val dataStore = getDataStoreWithSettings()
+        Assert.assertEquals(30f, dataStore.getFloat(SETTINGS_MIN_HUM_KEY, 100f))
+    }
+
+    @Test
+    fun getMaxTemperature_SuccessTest() {
+        val dataStore = getDataStoreWithSettings()
         Assert.assertEquals(20f, dataStore.getFloat(SETTINGS_MAX_TEMP_KEY, 100f))
+    }
+
+    @Test
+    fun getMinTemperature_SuccessTest() {
+        val dataStore = getDataStoreWithSettings()
+        Assert.assertEquals(10f, dataStore.getFloat(SETTINGS_MIN_TEMP_KEY, 100f))
+    }
+
+    @Test
+    fun getDefault_SuccessTest() {
+        val dataStore = getDataStoreWithSettings()
+        Assert.assertEquals(100f, dataStore.getFloat("none", 100f))
     }
 
     private fun getDataStoreWithSettings() : HGPreferenceDataStore {
