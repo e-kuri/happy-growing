@@ -10,7 +10,7 @@ import com.kuri.happygrowing.shared.SETTINGS_MIN_TEMP_KEY
 import com.kuri.happygrowing.shared.callback.OnResultCallback
 import com.kuri.happygrowing.shared.logging.ILogger
 
-class HGPreferenceDataStore(private val repo: ISettingsRepository, private val logger: ILogger): PreferenceDataStore() {
+    class HGPreferenceDataStore(private val repo: ISettingsRepository, private val logger: ILogger): PreferenceDataStore() {
 
     private lateinit var settings: Settings
 
