@@ -37,4 +37,27 @@ import com.kuri.happygrowing.shared.logging.ILogger
             else -> defValue
         }
 
+    override fun putFloat(key: String?, value: Float) {
+        val updated = Settings(settings.minTemp, settings.maxTemp, settings.minHum, settings.maxHum)
+        when(key) {
+            SETTINGS_MAX_HUM_KEY -> { updated.maxHum = value; sendUpdateRequest(updated) }
+            SETTINGS_MAX_TEMP_KEY -> { updated.maxTemp = value; sendUpdateRequest(updated) }
+            SETTINGS_MIN_HUM_KEY -> { updated.minHum = value; sendUpdateRequest(updated) }
+            SETTINGS_MIN_TEMP_KEY -> { updated.minTemp = value; sendUpdateRequest(updated) }
+        }
+    }
+
+    private fun sendUpdateRequest(settings: Settings){
+        repo.setSettings(settings, object: OnResultCallback<Boolean> {
+            override fun onSuccessResult(result: Boolean) {
+                this@HGPreferenceDataStore.settings = settings
+            }
+
+            override fun onError(e: Exception) {
+                logger.logError(e)
+            }
+
+        })
+    }
+
 }

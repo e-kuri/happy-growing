@@ -1,6 +1,7 @@
 package com.kuri.happygrowing.settings.repository
 
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.SetOptions
 import com.kuri.happygrowing.settings.model.Settings
 import com.kuri.happygrowing.shared.SETTINGS_COLLECTION
 import com.kuri.happygrowing.shared.callback.OnResultCallback
@@ -8,6 +9,16 @@ import com.kuri.happygrowing.shared.logging.ILogger
 
 internal class FirestoreSettingsRepository(private val settingsCollection: CollectionReference,
                                            private val logger: ILogger): ISettingsRepository {
+
+    /**
+     * Saves the settings in cloud firestore.
+     */
+    override fun setSettings(settings: Settings, callback: OnResultCallback<Boolean>) {
+        settingsCollection.document(SETTINGS_COLLECTION).set(settings, SetOptions.merge())
+            .addOnSuccessListener { callback.onSuccessResult(true) }
+            .addOnFailureListener { callback.onError(it) }
+    }
+
     /**
      * Gets the settings for the current user.
      * @param callback Callback to be called when a result is returned or an exception is thrown.

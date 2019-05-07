@@ -11,4 +11,9 @@ interface ISettingsRepository {
      */
     fun getSettings(callback: OnResultCallback<Settings>)
 
+
+    /**
+     * Saves the settings in the repository by replacing the existing one (if any).
+     */
+    fun setSettings(settings: Settings, callback: OnResultCallback<Boolean>)
 }
