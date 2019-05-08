@@ -13,10 +13,10 @@ class TestLogger : ILogger{
     }
 
     override fun logDebug(msg: String) {
-        println(msg)
+        println("DEBUG: $msg")
     }
 
     override fun logInfo(msg: String) {
-        println(msg)
+        println("INFO: $msg")
     }
 }

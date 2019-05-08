@@ -49,7 +49,7 @@ class CurrentStatsViewModel(
         }
 
         override fun onError(e: Exception) {
-            logger.logError(e.message ?: e.toString())
+            logger.logError(e)
             callback.onError(e)
         }
 
