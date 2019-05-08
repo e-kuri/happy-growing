@@ -8,6 +8,14 @@ import com.kuri.happygrowing.shared.logging.ILogger
 
 internal class FirestoreSettingsRepository(private val settingsCollection: CollectionReference,
                                            private val logger: ILogger): ISettingsRepository {
+    override fun setValue(key: String, value: Any, callback: OnResultCallback<Boolean>) {
+        settingsCollection.document(SETTINGS_COLLECTION).update(key, value).addOnSuccessListener {
+            callback.onSuccessResult(true)
+        }.addOnFailureListener{
+            callback.onError(it)
+        }
+    }
+
     /**
      * Gets the settings for the current user.
      * @param callback Callback to be called when a result is returned or an exception is thrown.

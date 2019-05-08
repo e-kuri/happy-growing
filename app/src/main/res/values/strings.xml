@@ -8,4 +8,5 @@
     <string name="max_temp_celsius_title">Maximum Temperature (°C)</string>
     <string name="min_hum_title">Minimum Humidity (%)</string>
     <string name="max_hum_title">Maximum Humidity (%)</string>
+    <string name="message_invalid_numeric_string">This setting should have a numeric value</string>
 </resources>
