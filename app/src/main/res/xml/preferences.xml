@@ -6,12 +6,12 @@
         android:title="Temperature">
 
         <EditTextPreference
-                android:key="minTemp"
+                android:key="min_temp"
                 android:title="@string/min_temp_celsius_title"
                 android:inputType="number"
                 app:useSimpleSummaryProvider="true"/>
         <EditTextPreference
-                android:key="maxTemp"
+                android:key="max_temp"
                 android:title="@string/max_temp_celsius_title"
                 android:inputType="number"
                 app:useSimpleSummaryProvider="true"/>
@@ -23,12 +23,12 @@
         android:title="Humidity">
 
         <EditTextPreference
-                android:key="minHum"
+                android:key="min_hum"
                 android:title="@string/min_hum_title"
                 android:inputType="number"
                 app:useSimpleSummaryProvider="true"/>
         <EditTextPreference
-                android:key="maxHum"
+                android:key="max_hum"
                 android:title="@string/max_hum_title"
                 android:inputType="number"
                 app:useSimpleSummaryProvider="true"/>

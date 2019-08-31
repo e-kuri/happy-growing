@@ -7,4 +7,5 @@ import com.kuri.happygrowing.shared.logging.ILogger
 class SettingsViewModel(val repo: ISettingsRepository, val logger: ILogger) : ViewModel() {
 
 
+
 }
