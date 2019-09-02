@@ -11,4 +11,6 @@ interface ISettingsRepository {
      */
     fun getSettings(callback: OnResultCallback<Settings>)
 
+    fun setSetting(key: String, value: String, callback: OnResultCallback<Void>)
+
 }

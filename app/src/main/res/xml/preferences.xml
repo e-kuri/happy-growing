@@ -6,14 +6,12 @@
         android:title="Temperature">
 
         <EditTextPreference
-                android:key="min_temp"
+                android:key="minTemp"
                 android:title="@string/min_temp_celsius_title"
-                android:inputType="number"
                 app:useSimpleSummaryProvider="true"/>
         <EditTextPreference
-                android:key="max_temp"
+                android:key="maxTemp"
                 android:title="@string/max_temp_celsius_title"
-                android:inputType="number"
                 app:useSimpleSummaryProvider="true"/>
 
     </com.kuri.happygrowing.settings.view.HGPreferenceCategory>
@@ -23,14 +21,12 @@
         android:title="Humidity">
 
         <EditTextPreference
-                android:key="min_hum"
+                android:key="minHum"
                 android:title="@string/min_hum_title"
-                android:inputType="number"
                 app:useSimpleSummaryProvider="true"/>
         <EditTextPreference
-                android:key="max_hum"
+                android:key="maxHum"
                 android:title="@string/max_hum_title"
-                android:inputType="number"
                 app:useSimpleSummaryProvider="true"/>
 
     </com.kuri.happygrowing.settings.view.HGPreferenceCategory>
