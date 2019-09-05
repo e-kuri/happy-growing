@@ -16,7 +16,7 @@ internal class FirestoreSettingsRepository(private val settingsCollection: Colle
      * @param value value of the setting to be created or updated.
      * @param callback Callback to be called after the creation or update is complete.
      */
-    override fun setSetting(key: String, value: Float, callback: OnResultCallback<Void?>) {
+    override fun setSetting(key: String, value: Any, callback: OnResultCallback<Void?>) {
         val data = hashMapOf(key to value)
         settingsCollection.document(DbConstants.SETTINGS_COLLECTION).set(data, SetOptions.merge()).addOnSuccessListener {
             callback.onSuccessResult(it)

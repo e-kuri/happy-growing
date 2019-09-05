@@ -11,6 +11,9 @@ import com.kuri.happygrowing.shared.logging.ILogger
 class SettingsViewModel(val repo: ISettingsRepository, val logger: ILogger) : ViewModel() {
 
     companion object {
+        /**
+         * Sets the preference in the repository asynchronously.
+         */
         fun setPreference(key: String, value: String) {
             val settingData = workDataOf(SetSettingWorker.KEY to key,
                 SetSettingWorker.VALUE to value)
