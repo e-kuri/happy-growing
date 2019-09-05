@@ -27,8 +27,8 @@ class SetSettingWorker(appContext: Context, workerParameters: WorkerParameters)
             return Result.failure()
         }
 
-        val callback = object: OnResultCallback<Void> {
-            override fun onSuccessResult(result: Void) {
+        val callback = object: OnResultCallback<Void?> {
+            override fun onSuccessResult(result: Void?) {
                 success = true
                 countDownLatch.countDown()
             }
@@ -39,7 +39,7 @@ class SetSettingWorker(appContext: Context, workerParameters: WorkerParameters)
         }
 
         val settingsRepository = RepositoryFactory.settingsRepository
-        settingsRepository.setSetting(key, value, callback)
+        settingsRepository.setSetting(key, value.toFloat(), callback)
         countDownLatch.await(TIMEOUT_SECONDS, TimeUnit.SECONDS)
         if(success) {
             return Result.success()

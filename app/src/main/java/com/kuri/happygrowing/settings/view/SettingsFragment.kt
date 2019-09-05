@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.InputType
 import androidx.lifecycle.ViewModelProviders
 import androidx.preference.EditTextPreference
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.kuri.happygrowing.R
 import com.kuri.happygrowing.settings.viewmodel.SettingsViewModel
@@ -12,11 +13,11 @@ import com.kuri.happygrowing.shared.DbConstants
 
 class SettingsFragment: PreferenceFragmentCompat() {
 
-    lateinit var viewModel: SettingsViewModel
+    private lateinit var viewModel: SettingsViewModel
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
-        viewModel = ViewModelProviders.of(activity, SettingsViewModelFactory.create(SettingsViewModel::class.java))
+        viewModel = ViewModelProviders.of(activity!!, SettingsViewModelFactory).get(SettingsViewModel::class.java)
         initializeNumericPreferences()
     }
 
@@ -36,8 +37,9 @@ class SettingsFragment: PreferenceFragmentCompat() {
             preference?.setOnBindEditTextListener { editText ->
                 editText.inputType = InputType.TYPE_CLASS_NUMBER
             }
-            preference?.setOnBindEditTextListener {
-
+            preference?.setOnPreferenceChangeListener { preference: Preference, newValue: Any ->
+                SettingsViewModel.setPreference(preference.key, newValue.toString())
+                true
             }
         }
     }
