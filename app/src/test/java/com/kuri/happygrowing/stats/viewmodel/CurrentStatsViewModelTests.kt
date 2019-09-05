@@ -2,6 +2,7 @@ package com.kuri.happygrowing.stats.viewmodel
 
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.kuri.happygrowing.shared.LifecycleOwnerStub
+import com.kuri.happygrowing.shared.any
 import com.kuri.happygrowing.shared.callback.OnResultCallback
 import com.kuri.happygrowing.shared.logging.ILogger
 import com.kuri.happygrowing.stats.model.Measurement
@@ -22,12 +23,6 @@ class CurrentStatsViewModelTests {
     @Mock
     private lateinit var logger : ILogger
 
-    private fun <T> any(): T {
-        Mockito.any<T>()
-        return uninitialized()
-    }
-
-    private fun <T> uninitialized(): T = null as T
     private var lifecycleOwner : LifecycleOwnerStub? = null
 
     @Mock

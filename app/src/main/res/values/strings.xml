@@ -4,4 +4,9 @@
     <string name="settings">Settings</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="min_temp_celsius_title">Minimum Temperature (°C)</string>
+    <string name="max_temp_celsius_title">Maximum Temperature (°C)</string>
+    <string name="min_hum_title">Minimum Humidity (%)</string>
+    <string name="max_hum_title">Maximum Humidity (%)</string>
+    <string name="error_numeric_value">Only numeric values are allowed here</string>
 </resources>

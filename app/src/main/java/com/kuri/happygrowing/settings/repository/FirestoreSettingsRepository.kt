@@ -1,45 +1,51 @@
 package com.kuri.happygrowing.settings.repository
 
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.Source
+import com.google.firebase.firestore.SetOptions
 import com.kuri.happygrowing.settings.model.Settings
-import com.kuri.happygrowing.shared.SETTINGS_COLLECTION
+import com.kuri.happygrowing.shared.DbConstants
 import com.kuri.happygrowing.shared.callback.OnResultCallback
 import com.kuri.happygrowing.shared.logging.ILogger
 
 internal class FirestoreSettingsRepository(private val settingsCollection: CollectionReference,
                                            private val logger: ILogger): ISettingsRepository {
+
     /**
-     * Gets the settings for the current user.
-     * This method tries to get the settings from the local storage first. If this operation fails, the settings
-     * from the server will be queried.
-     * If no settings were found neither on local storage nor in the server, a Settings object with all its values set
-     * to 0 is returned.
-     * @param callback Callback to be called when a result is returned or an exception is thrown.
+     * Creates or updates the setting with the specfied key and value.
+     * @param key of the setting to be updated.
+     * @param value value of the setting to be created or updated.
+     * @param callback Callback to be called after the creation or update is complete.
      */
-    override fun getSettings(callback: OnResultCallback<Settings>) {
-        getSettings(callback, Source.CACHE)
+    override fun setSetting(key: String, value: Any, callback: OnResultCallback<Void?>) {
+        val data = hashMapOf(key to value)
+        settingsCollection.document(DbConstants.SETTINGS_COLLECTION).set(data, SetOptions.merge()).addOnSuccessListener {
+            callback.onSuccessResult(it)
+        }.addOnFailureListener {
+            callback.onError(it)
+        }
     }
 
     /**
-     * Gets the settings fro the specified source. If the operation fails and the source is local storage, a retry is performed
-     * with the source set to the server.
+     * Gets the settings for the current user.
+     * If no settings were found, a Settings object with all its values set to 0 is returned.
+     * @param callback Callback to be called when a result is returned or an exception is thrown.
      */
-    private fun getSettings(callback: OnResultCallback<Settings>, source: Source){
-        settingsCollection.document(SETTINGS_COLLECTION).get(source).addOnSuccessListener{
-            val settings = if(it.exists()) it.toObject(Settings::class.java) else Settings(0f, 0f, 0f, 0f)
-            if(settings == null){
-                logger.logError("Could not cast result to settings object: $it")
-                callback.onSuccessResult(Settings(0f,0f,0f,0f))
+    override fun getSettings(callback: OnResultCallback<Settings>) {
+        settingsCollection.document(DbConstants.SETTINGS_COLLECTION).get().addOnSuccessListener{
+            if(it.exists()) {
+                val settings = it.toObject(Settings::class.java)
+                if(settings == null){
+                    logger.logError("Could not cast result to settings object: $it")
+                    callback.onError(ClassCastException("Could not cast result to settings object: $it"))
+                } else {
+                    callback.onSuccessResult(settings)
+                }
             } else {
-                callback.onSuccessResult(settings)
+                callback.onSuccessResult(Settings())
             }
         }.addOnFailureListener {
-            if(source == Source.CACHE){
-                getSettings(callback, Source.SERVER)
-            } else {
-                callback.onError(it)
-            }
+            callback.onError(it)
         }
     }
+
 }
