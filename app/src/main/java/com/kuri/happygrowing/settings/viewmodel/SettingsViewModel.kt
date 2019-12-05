@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.kuri.happygrowing.settings.Worker.SetSettingWorker
+import com.kuri.happygrowing.settings.worker.SetSettingWorker
 import com.kuri.happygrowing.settings.repository.ISettingsRepository
 import com.kuri.happygrowing.shared.logging.ILogger
 

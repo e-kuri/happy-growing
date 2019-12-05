@@ -1,4 +1,4 @@
-package com.kuri.happygrowing.settings.Worker
+package com.kuri.happygrowing.settings.worker
 
 import android.content.Context
 import androidx.work.Worker
